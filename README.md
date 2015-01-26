@@ -1,7 +1,6 @@
 Events module for Rock Framework
 =================
 
-
 Requirements
 -------------------
  * **PHP 5.4+**
