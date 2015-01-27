@@ -1,4 +1,4 @@
-Events module for Rock Framework
+Pub/Sub module for Rock Framework
 =================
 
 [![Build Status](https://travis-ci.org/romeOz/rock-events.svg?branch=master)](https://travis-ci.org/romeOz/rock-events)
@@ -11,4 +11,4 @@ Requirements
 License
 -------------------
 
-Events module for Rock Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Pub/Sub module for Rock Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

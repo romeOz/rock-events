@@ -1,7 +1,7 @@
 {
     "name": "romeoz/rock-events",
-    "description": "Events module for Rock Framework",
-    "keywords": ["event", "framerock"],
+    "description": "Pub/Sub module for Rock Framework",
+    "keywords": ["event", "pubsub", "framerock"],
     "type": "library",
     "license": "MIT",
     "support": {
