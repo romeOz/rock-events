@@ -20,9 +20,9 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::offAll();
     }
 
-
     public function testOnAsCallback()
     {
+        Event::trigger(new Foo(), 'foo');
         Event::on(
             Foo::className(),
             'foo',
@@ -34,6 +34,46 @@ class EventTest extends \PHPUnit_Framework_TestCase
             ]
         );
         Event::trigger(new Foo(), 'foo');
+
+        // get
+        $this->assertNotEmpty(Event::get(new Foo(), 'foo'));
+        $this->assertEmpty(Event::get(new Foo(), 'unknown'));
+
+        // count by class
+        $this->assertSame(1, Event::countClass(new Foo()));
+
+        // off by class
+        Event::offClass(new Foo());
+        $this->assertFalse(Event::has(new Foo(), 'foo'));
+    }
+
+    public function testHandled()
+    {
+        Event::on(
+            Foo::className(),
+            'foo',
+            [
+                function (Event $event) {
+                    $event->handled = true;
+                    echo $event->data['foo'];
+                },
+                ['foo' => 'test']
+            ]
+        );
+
+        Event::on(
+            Foo::className(),
+            'foo',
+            [
+                function (Event $event) {
+                    echo $event->data['foo'];
+                },
+                ['foo' => 'test']
+            ]
+        );
+
+        Event::trigger(new Foo(), 'foo');
+        $this->expectOutputString('test');
     }
 
     public function testTriggerChild()
@@ -72,7 +112,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('static');
     }
 
-
     public function testOnAsInstance()
     {
         Event::on(
@@ -84,23 +123,20 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('1instancebar');
     }
 
-    public function testHasTrue()
+    public function testExists()
     {
+        // true
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                }, ['foo' => 'test']
-            ]
+            function (Event $event) {
+                echo $event->data['foo'];
+            }
         );
         $this->assertTrue(Event::has(Foo::className(), 'foo'));
-    }
 
-    public function testHasFalse()
-    {
-        $this->assertFalse(Event::has(Foo::className(), 'foo'));
+        // false
+        $this->assertFalse(Event::has(Foo::className(), 'unknown'));
     }
 
     public function testMultiEventAndCount()
@@ -177,7 +213,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertTrue(Event::has(Foo::className(), 'foo'));
-        $this->assertTrue(Event::off(Foo::className(), 'foo'));
+        Event::offMulti([[Foo::className(), 'foo']]);
         $this->assertFalse(Event::has(Foo::className(), 'foo'));
     }
 
