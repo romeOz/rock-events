@@ -33,12 +33,11 @@ class Event implements ObjectInterface
     public $handled = false;
 
     /**
-     * Array of events
+     * Array of events.
      *
      * @var array
      */
     protected static $events = [];
-
 
     /**
      * Subscribing in event.
@@ -82,7 +81,6 @@ class Event implements ObjectInterface
         } while (($class = get_parent_class($class)) !== false);
     }
 
-
     /**
      * Publishing event.
      *
@@ -110,7 +108,6 @@ class Event implements ObjectInterface
         list($function, $data) = $handler;
         static::$events[$class][$name][] = [self::_calculateHandler($function), $data];
     }
-
 
     /**
      * Detach event.
@@ -148,13 +145,13 @@ class Event implements ObjectInterface
     }
 
     /**
-     * Detach events
+     * Detach events.
      *
      * ```php
      * $events = [
-     *  ['rock\\db\\Query', \rock\db\Query::EVENT_AFTER_FIND]
+     *  ['foo\\Foo', 'onAfter']
      * ];
-     * \rock\events\Event::offMulti($events);
+     * Event::offMulti($events);
      * ```
      *
      * @param array $names - names of event
@@ -176,7 +173,7 @@ class Event implements ObjectInterface
     }
 
     /**
-     * @param string|object $class
+     * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      */
     public static function offClass($class)
     {
@@ -186,12 +183,11 @@ class Event implements ObjectInterface
         } while (($class = get_parent_class($class)) !== false);
     }
 
-
     /**
-     * Get event
+     * Get event.
      *
-     * @param string|object       $class
-     * @param string $name - name of event
+     * @param string|object $class the object or the fully qualified class name specifying the class-level event.
+     * @param string $name name of event
      * @return array|null
      */
     public static function get($class, $name)
@@ -200,21 +196,23 @@ class Event implements ObjectInterface
         return !empty(static::$events[$class][$name]) ? static::$events[$class][$name] : null;
     }
 
-
     /**
-     * @inheritdoc
+     * Get all events.
+     *
+     * @param array $only
+     * @param array $exclude
+     * @return array
      */
     public static function getAll(array $only = [], array $exclude = [])
     {
         return ArrayHelper::only(static::$events, $only, $exclude);
     }
 
-
     /**
-     * Exists event
+     * Exists event.
      *
-     * @param string|object       $class
-     * @param string $name - name of event
+     * @param string|object $class the object or the fully qualified class name specifying the class-level event.
+     * @param string $name name of event
      * @return bool
      */
     public static function has($class, $name)
@@ -228,7 +226,6 @@ class Event implements ObjectInterface
 
         return false;
     }
-
 
     /**
      * Total count of events
@@ -278,7 +275,6 @@ class Event implements ObjectInterface
 
         return $count;
     }
-
 
     private static function _calculateHandler($function)
     {
