@@ -44,7 +44,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
         // off by class
         Event::offClass(new Foo());
-        $this->assertFalse(Event::has(new Foo(), 'foo'));
+        $this->assertFalse(Event::exists(new Foo(), 'foo'));
     }
 
     public function testHandled()
@@ -133,10 +133,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
                 echo $event->data['foo'];
             }
         );
-        $this->assertTrue(Event::has(Foo::className(), 'foo'));
+        $this->assertTrue(Event::exists(Foo::className(), 'foo'));
 
         // false
-        $this->assertFalse(Event::has(Foo::className(), 'unknown'));
+        $this->assertFalse(Event::exists(Foo::className(), 'unknown'));
     }
 
     public function testMultiEventAndCount()
@@ -212,9 +212,9 @@ class EventTest extends \PHPUnit_Framework_TestCase
                 }, ['foo' => 'test']
             ]
         );
-        $this->assertTrue(Event::has(Foo::className(), 'foo'));
+        $this->assertTrue(Event::exists(Foo::className(), 'foo'));
         Event::offMulti([[Foo::className(), 'foo']]);
-        $this->assertFalse(Event::has(Foo::className(), 'foo'));
+        $this->assertFalse(Event::exists(Foo::className(), 'foo'));
     }
 
     public function testOffWithHandler()

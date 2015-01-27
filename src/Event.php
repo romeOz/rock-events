@@ -215,7 +215,7 @@ class Event implements ObjectInterface
      * @param string $name name of event
      * @return bool
      */
-    public static function has($class, $name)
+    public static function exists($class, $name)
     {
         $class = ObjectHelper::getClass($class);
         do {
