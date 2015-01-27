@@ -1,6 +1,6 @@
 {
     "name": "romeoz/rock-events",
-    "description": "A simple implementation of PubSub for PHP",
+    "description": "A simple implementation of Pub/Sub for PHP",
     "keywords": ["event", "pubsub", "publish-subscribe"],
     "type": "library",
     "license": "MIT",
