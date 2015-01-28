@@ -141,15 +141,14 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
     public function testMultiEventAndCount()
     {
-        Event::on(
-            Foo::className(),
-            'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                }, ['foo' => 'test']
-            ]
-        );
+        $class = Foo::className();
+        $eventName = 'foo';
+        $handler = [
+            function (Event $event) {
+                echo $event->data['foo'];
+            }, ['foo' => 'test']
+        ];
+        Event::on($class, $eventName, $handler);
         Event::on(Foo::className(), 'foo', [[Foo::className(), 'display'], ['foo' => 'static']]);
         Event::on(Foo::className(), 'foo', [[new Foo(), 'get'], ['foo' => 'instance']]);
         $this->assertSame(Event::count(), 1);
@@ -229,8 +228,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
             'foo',
             $handler
         );
-        Event::on(Foo::className(), 'foo', [[Foo::className(), 'display'], ['foo' => 'static']]);
-        Event::on(Foo::className(), 'foo', [[new Foo(), 'get'], ['foo' => 'instance']]);
+        Event::on(Foo::className(), 'foo', [[Foo::className(), 'display'], ['foo', 'static']]);
+        Event::on(Foo::className(), 'foo', [[new Foo(), 'get'], ['foo', 'instance']]);
         $this->assertSame(Event::countHandlers(Foo::className(), 'foo'), 3);
         Event::off(Foo::className(), 'foo', $handler);
         $this->assertSame(Event::countHandlers(Foo::className(), 'foo'), 2);
