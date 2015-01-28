@@ -6,6 +6,14 @@ php:
   - 5.6
   - hhvm
   - hhvm-nightly
+  
+# faster builds on new travis setup not using sudo
+sudo: false
+
+# cache composer cache
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 matrix:
   fast_finish: true
