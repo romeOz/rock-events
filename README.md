@@ -4,7 +4,7 @@ Implementation of Publisher-Subscriber for PHP
 [![Latest Stable Version](https://poser.pugx.org/romeOz/rock-events/v/stable.svg)](https://packagist.org/packages/romeOz/rock-events)
 [![Total Downloads](https://poser.pugx.org/romeOz/rock-events/downloads.svg)](https://packagist.org/packages/romeOz/rock-events)
 [![Build Status](https://travis-ci.org/romeOz/rock-events.svg?branch=master)](https://travis-ci.org/romeOz/rock-events)
-[![HHVM Status](/badge/romeoz/rock-events.svg)](/package/romeoz/rock-events)
+[![HHVM Status](http://hhvm.h4cc.de/badge/romeoz/rock-events.svg)](http://hhvm.h4cc.de/package/romeoz/rock-events)
 [![Coverage Status](https://coveralls.io/repos/romeOz/rock-events/badge.svg?branch=master)](https://coveralls.io/r/romeOz/rock-events?branch=master)
 [![License](https://poser.pugx.org/romeOz/rock-events/license.svg)](https://packagist.org/packages/romeOz/rock-events)
 
