@@ -42,11 +42,39 @@ class Event implements ObjectInterface
     /**
      * Subscribing in event.
      *
+     * @param string|object $class the fully qualified class name to which the event handler needs to attach.
+     * @param string         $name          name of event
+     * @param array|\Closure $handler       handler
+     *
+     * - `[function (Event $event) { ... }, $data]`
+     * - `[[new Foo, 'method'], $data]`
+     * - `[['Foo', 'static_method'], $data]`
+     *
+     */
+    public static function on($class, $name, $handler)
+    {
+        $class = ObjectHelper::getClass($class);
+        if (!isset(static::$events[$class][$name])) {
+            static::$events[$class][$name] = [];
+        }
+
+        if ($handler instanceof \Closure) {
+            $handler = [$handler];
+        }
+
+        $handler[1] = Helper::getValue($handler[1], [], true);
+        list($function, $data) = $handler;
+        static::$events[$class][$name][] = [self::_calculateHandler($function), $data];
+    }
+
+    /**
+     * Publishing event.
+     *
      * @param string|object $class the object or the fully qualified class name specifying the class-level event.
      * @param string $name the event name.
      * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.
      */
-    public static function trigger($class, $name, $event = null)
+    public static function trigger($class, $name, Event $event = null)
     {
         if (empty(static::$events)) {
             return;
@@ -79,34 +107,6 @@ class Event implements ObjectInterface
                 //static::off($class, $name);
             }
         } while (($class = get_parent_class($class)) !== false);
-    }
-
-    /**
-     * Publishing event.
-     *
-     * @param string|object $class the fully qualified class name to which the event handler needs to attach.
-     * @param string         $name          name of event
-     * @param array|\Closure $handler       handler
-     *
-     * - `[function ($args) { ... }, $data]`
-     * - `[$instance, 'method', $data]`
-     * - `['Class', 'static_method', $data]`
-     *
-     */
-    public static function on($class, $name, $handler)
-    {
-        $class = ObjectHelper::getClass($class);
-        if (!isset(static::$events[$class][$name])) {
-            static::$events[$class][$name] = [];
-        }
-
-        if ($handler instanceof \Closure) {
-            $handler = [$handler];
-        }
-
-        $handler[1] = Helper::getValue($handler[1], [], true);
-        list($function, $data) = $handler;
-        static::$events[$class][$name][] = [self::_calculateHandler($function), $data];
     }
 
     /**
