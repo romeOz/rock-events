@@ -11,13 +11,13 @@ trait EventsTrait
 
     private $_events = [];
 
-    public function on($name, $handler, $args = null, $append = true)
+    public function on($name, $handler, $append = true)
     {
         $this->ensureBehaviors();
         if ($append || empty($this->_events[$name])) {
-            $this->_events[$name][] = [$handler, $args];
+            $this->_events[$name][] = $handler;
         } else {
-            array_unshift($this->_events[$name], [$handler, $args]);
+            array_unshift($this->_events[$name], $handler);
         }
         return $this;
     }
@@ -69,8 +69,7 @@ trait EventsTrait
             $event->handled = false;
             $event->name = $name;
             foreach ($this->_events[$name] as $handler) {
-                $event->data = $handler[1];
-                call_user_func($handler[0], $event);
+                call_user_func($handler, $event);
                 // stop further handling if the event is handled
                 if ($event->handled) {
                     return;

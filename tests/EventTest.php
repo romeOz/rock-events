@@ -9,7 +9,6 @@ use rock\events\Event;
  */
 class EventTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         static::tearDownAfterClass();
@@ -26,12 +25,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    $this->assertTrue($event->owner instanceof Foo);
-                    $this->assertSame($event->data['foo'], 'test');
-                }, ['foo' => 'test']
-            ]
+            function (Event $event) {
+                $this->assertTrue($event->owner instanceof Foo);
+            }
+
         );
         Event::trigger(new Foo(), 'foo');
 
@@ -52,24 +49,19 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    $event->handled = true;
-                    echo $event->data['foo'];
-                },
-                ['foo' => 'test']
-            ]
+            function (Event $event) {
+                $event->handled = true;
+                echo 'test';
+            }
         );
 
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                },
-                ['foo' => 'test']
-            ]
+            function () {
+                echo 'test';
+            }
+
         );
 
         Event::trigger(new Foo(), 'foo');
@@ -81,22 +73,16 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    $this->assertTrue($event->owner instanceof SubFoo);
-                    $this->assertSame($event->data['foo'], 'test');
-                }, ['foo' => 'test']
-            ]
+            function (Event $event) {
+                $this->assertTrue($event->owner instanceof SubFoo);
+            }
         );
         Event::on(
             SubFoo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    $this->assertTrue($event->owner instanceof SubFoo);
-                    $this->assertSame($event->data['foo'], 'test');
-                }, ['foo' => 'test']
-            ]
+            function (Event $event) {
+                $this->assertTrue($event->owner instanceof SubFoo);
+            }
         );
         Event::trigger(new SubFoo, 'foo');
     }
@@ -106,7 +92,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'bar',
-            [[Foo::className(), 'display'], ['foo' => 'static']]
+            [Foo::className(), 'display']
         );
         Event::trigger(Foo::className(), 'bar');
         $this->expectOutputString('static');
@@ -117,7 +103,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'bar',
-            [[new Foo(), 'get'], ['foo' => 'instance']]
+            [new Foo(), 'get']
         );
         Event::trigger(new Foo, 'bar');
         $this->expectOutputString('1instancebar');
@@ -130,7 +116,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
             Foo::className(),
             'foo',
             function (Event $event) {
-                echo $event->data['foo'];
             }
         );
         $this->assertTrue(Event::exists(Foo::className(), 'foo'));
@@ -143,18 +128,18 @@ class EventTest extends \PHPUnit_Framework_TestCase
     {
         $class = Foo::className();
         $eventName = 'foo';
-        $handler = [
-            function (Event $event) {
-                echo $event->data['foo'];
-            }, ['foo' => 'test']
-        ];
+        $handler =
+            function () {
+                echo 'closure';
+            }
+        ;
         Event::on($class, $eventName, $handler);
-        Event::on(Foo::className(), 'foo', [[Foo::className(), 'display'], ['foo' => 'static']]);
-        Event::on(Foo::className(), 'foo', [[new Foo(), 'get'], ['foo' => 'instance']]);
+        Event::on(Foo::className(), 'foo', [Foo::className(), 'display']);
+        Event::on(Foo::className(), 'foo', [new Foo(), 'get']);
         $this->assertSame(Event::count(), 1);
         $this->assertSame(Event::countHandlers(Foo::className(), 'foo'), 3);
         Event::trigger(Foo::className(), 'foo');
-        $this->expectOutputString('teststaticinstancefoo');
+        $this->expectOutputString('closurestaticinstancefoo');
     }
 
     public function testGetAll()
@@ -162,27 +147,21 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                },
-                ['foo' => 'test']
-            ]
+            function () {
+                echo 'closure';
+            }
         );
         Event::on(
             Foo::className(),
             'bar',
-            [[Foo::className(), 'display'], ['foo' => 'static']]
+            [Foo::className(), 'display']
         );
         Event::on(
             SubFoo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                },
-                ['foo' => 'test']
-            ]
+            function (Event $event) {
+                echo 'closure';
+            }
         );
         $this->assertSame(
             array_keys(Event::getAll()),
@@ -192,10 +171,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertSame(
-            array_keys(Event::getAll([SubFoo::className()])),
-            array(
-                0 => SubFoo::className(),
-            )
+            [
+                SubFoo::className(),
+            ],
+            array_keys(Event::getAll([SubFoo::className()]))
         );
     }
 
@@ -205,11 +184,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
         Event::on(
             Foo::className(),
             'foo',
-            [
-                function (Event $event) {
-                    echo $event->data['foo'];
-                }, ['foo' => 'test']
-            ]
+            function () {
+                echo 'closure';
+            }
+
         );
         $this->assertTrue(Event::exists(Foo::className(), 'foo'));
         Event::offMulti([[Foo::className(), 'foo']]);
@@ -218,18 +196,18 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
     public function testOffWithHandler()
     {
-        $handler = [
-            function (Event $event) {
-                echo $event->data['foo'];
-            }, ['foo' => 'test']
-        ];
+        $handler =
+            function () {
+                echo 'closure';
+            }
+        ;
         Event::on(
             Foo::className(),
             'foo',
             $handler
         );
-        Event::on(Foo::className(), 'foo', [[Foo::className(), 'display'], ['foo', 'static']]);
-        Event::on(Foo::className(), 'foo', [[new Foo(), 'get'], ['foo', 'instance']]);
+        Event::on(Foo::className(), 'foo', [Foo::className(), 'display']);
+        Event::on(Foo::className(), 'foo', [new Foo(), 'get']);
         $this->assertSame(Event::countHandlers(Foo::className(), 'foo'), 3);
         Event::off(Foo::className(), 'foo', $handler);
         $this->assertSame(Event::countHandlers(Foo::className(), 'foo'), 2);
@@ -240,15 +218,15 @@ class Foo
 {
     use ClassName;
 
-    public static function display(Event $event)
+    public static function display()
     {
-        echo $event->data['foo'];
+        echo 'static';
     }
 
     public function get(Event $event)
     {
 
-        echo $event->owner instanceof static, $event->data['foo'], $event->name;
+        echo $event->owner instanceof static, 'instance', $event->name;
     }
 }
 

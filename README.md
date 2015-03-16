@@ -58,7 +58,7 @@ Event::trigger($object,  'onAfter'); // output: Hello Rock!
 Documentation
 -------------------
 
-####on(string|object $class, string $name, mixed $handler)
+####on(string|object $class, string $name, callable $handler)
 
 To subscribe to the event.
 
@@ -66,18 +66,16 @@ Set the handler can be as follows:
 
 ```php
 $handler = function (Event $event) { 
-    echo "Hello {$event->data}"; 
+    echo "Hello Rock!"; 
 };
-$args = ' Rock!';
-
-Event::on(new Foo, 'onAfter', [$handler, $args]);
+Event::on(new Foo, 'onAfter', $handler);
 ```
 
 Options:
 
- * `function (Event $event) { ... }` or `[function (Event $event) { ... }, $args]`
- * `[new Foo, 'method']` or `[[new Foo, 'method'], $args]`
- * `['Foo', 'static_method']` or `[['Foo', 'static_method'], $args]`
+ * `function (Event $event) { ... }`
+ * `[new Foo, 'method']`
+ * `['Foo', 'static_method']`
 
 ####trigger(string|object $class, string $name, Event $event = null)
 
@@ -91,7 +89,7 @@ Event::trigger(new Foo,  'onEvent');
 Event::trigger('test\Foo',  'onEvent');
 ```
     
-####off(string|object $class, string $name, mixed $handler = null)
+####off(string|object $class, string $name, callable $handler = null)
 
 Detach event.
 

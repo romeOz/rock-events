@@ -20,12 +20,11 @@ interface EventsInterface extends ObjectInterface
      * Publishing event
      *
      * @param string         $name    name of event
-     * @param array|\Closure $handler handler
-     * @param null           $args
+     * @param callable $handler handler
      * @param bool           $append
      * @return static|ActiveQueryInterface
      */
-    public function on($name, $handler, $args = null, $append = true);
+    public function on($name, callable $handler, $append = true);
 
     /**
      * Detach event

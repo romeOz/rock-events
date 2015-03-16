@@ -1,11 +1,9 @@
 <?php
 namespace rock\events;
 
-use rock\base\Alias;
 use rock\base\ObjectInterface;
 use rock\base\ObjectTrait;
 use rock\helpers\ArrayHelper;
-use rock\helpers\Helper;
 use rock\helpers\ObjectHelper;
 
 class Event implements ObjectInterface
@@ -23,8 +21,6 @@ class Event implements ObjectInterface
     public $owner;
     /** @var  mixed */
     public $result;
-    /** @var  mixed */
-    public $data;
     /**
      * @var boolean whether the event is handled. Defaults to `false`.
      * When a handler sets this to be true, the event processing will stop and
@@ -44,27 +40,20 @@ class Event implements ObjectInterface
      *
      * @param string|object $class the fully qualified class name to which the event handler needs to attach.
      * @param string         $name          name of event
-     * @param array|\Closure $handler       handler
+     * @param callable $handler       handler
      *
-     * - `[function (Event $event) { ... }, $data]`
-     * - `[[new Foo, 'method'], $data]`
-     * - `[['Foo', 'static_method'], $data]`
+     * - `function (Event $event) { ... }`
+     * - `[new Foo, 'method']`
+     * - `['Foo', 'static_method']`
      *
      */
-    public static function on($class, $name, $handler)
+    public static function on($class, $name, callable $handler)
     {
         $class = ObjectHelper::getClass($class);
         if (!isset(static::$events[$class][$name])) {
             static::$events[$class][$name] = [];
         }
-
-        if ($handler instanceof \Closure) {
-            $handler = [$handler];
-        }
-
-        $handler[1] = Helper::getValue($handler[1], [], true);
-        list($function, $data) = $handler;
-        static::$events[$class][$name][] = [self::_calculateHandler($function), $data];
+        static::$events[$class][$name][] = $handler;
     }
 
     /**
@@ -97,9 +86,7 @@ class Event implements ObjectInterface
         do {
             if (!empty(static::$events[$class][$name])) {
                 foreach (static::$events[$class][$name] as $handler) {
-                    list($function, $data) = $handler;
-                    $event->data = $data;
-                    call_user_func($function, $event);
+                    call_user_func($handler, $event);
                     if ($event->handled) {
                         return;
                     }
@@ -119,7 +106,7 @@ class Event implements ObjectInterface
      * @return bool
      * @see on()
      */
-    public static function off($class, $name, $handler = null)
+    public static function off($class, $name, callable $handler = null)
     {
         $class = ObjectHelper::getClass($class);
         if ($handler === null) {
@@ -274,14 +261,5 @@ class Event implements ObjectInterface
         } while (($class = get_parent_class($class)) !== false);
 
         return $count;
-    }
-
-    private static function _calculateHandler($function)
-    {
-        if (is_array($function) && is_string($function[0])) {
-            $function[0] = Alias::getAlias($function[0]);
-        }
-
-        return $function;
     }
 }
