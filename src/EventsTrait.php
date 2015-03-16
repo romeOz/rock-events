@@ -44,7 +44,7 @@ trait EventsTrait
         } else {
             $removed = false;
             foreach ($this->_events[$name] as $i => $event) {
-                if ($event[0] === $handler) {
+                if ($event === $handler) {
                     unset($this->_events[$name][$i]);
                     $removed = true;
                 }
