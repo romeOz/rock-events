@@ -11,7 +11,7 @@ trait EventsTrait
 
     private $_events = [];
 
-    public function on($name, $handler, $append = true)
+    public function on($name, callable $handler, $append = true)
     {
         $this->ensureBehaviors();
         if ($append || empty($this->_events[$name])) {
@@ -32,7 +32,7 @@ trait EventsTrait
      * @return boolean if a handler is found and detached
      * @see on()
      */
-    public function off($name, $handler = null)
+    public function off($name, callable $handler = null)
     {
         $this->ensureBehaviors();
         if (empty($this->_events[$name])) {
