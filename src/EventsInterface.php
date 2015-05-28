@@ -4,7 +4,7 @@ namespace rock\events;
 
 
 use rock\base\ObjectInterface;
-use rock\db\ActiveQueryInterface;
+use rock\db\common\ActiveQueryInterface;
 
 interface EventsInterface extends ObjectInterface
 {
