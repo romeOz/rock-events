@@ -14,7 +14,7 @@ Features
 -------------------
 
  * Handler can be a closure, instance, and static class
- * Module for [Rock Framework](https://github.com/romeOz/rock)
+ * Standalone module/component for [Rock Framework](https://github.com/romeOz/rock)
 
 Installation
 -------------------
