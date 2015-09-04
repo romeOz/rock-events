@@ -1,36 +1,40 @@
 {
-    "name": "romeoz/rock-events",
-    "description": "A simple implementation of Pub/Sub for PHP",
-    "keywords": ["event", "pubsub", "publish-subscribe"],
-    "type": "library",
-    "license": "MIT",
-    "support": {
-        "email": "serggalka@gmail.com",
-        "issues": "https://github.com/romeOz/rock-events/issues",
-        "source": "https://github.com/romeOz/rock-events"
-    },
-    "authors": [
-        {
-            "name": "Ruslan",
-            "email": "serggalka@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "romeoz/rock-base" : "*@dev",
-        "romeoz/rock-helpers" : "*@dev"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.7.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "rock\\events\\": "src/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.10-dev"
-        }
+  "name": "romeoz/rock-events",
+  "description": "A simple implementation of Pub/Sub for PHP",
+  "keywords": [
+    "event",
+    "pubsub",
+    "publish-subscribe"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "support": {
+    "email": "serggalka@gmail.com",
+    "issues": "https://github.com/romeOz/rock-events/issues",
+    "source": "https://github.com/romeOz/rock-events"
+  },
+  "authors": [
+    {
+      "name": "Ruslan",
+      "email": "serggalka@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "romeoz/rock-base": "*@dev",
+    "romeoz/rock-helpers": "*@dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "rock\\events\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.10-dev"
+    }
+  }
 }
