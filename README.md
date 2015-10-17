@@ -8,8 +8,6 @@ Implementation of Publisher-Subscriber for PHP
 [![Coverage Status](https://coveralls.io/repos/romeOz/rock-events/badge.svg?branch=master)](https://coveralls.io/r/romeOz/rock-events?branch=master)
 [![License](https://poser.pugx.org/romeOz/rock-events/license.svg)](https://packagist.org/packages/romeOz/rock-events)
 
-[Rock Events on Packagist](https://packagist.org/packages/romeOz/rock-events)
-
 Features
 -------------------
 
@@ -21,7 +19,9 @@ Installation
 
 From the Command Line:
 
-```composer require romeoz/rock-events:*```
+```
+composer require romeoz/rock-events
+```
 
 In your composer.json:
 
@@ -47,8 +47,8 @@ class Foo
 $object = new Foo();
 $eventName = 'onAfter';
 $handler = function (Event $event) {
-                        echo "Hello {$event->owner->str}"; 
-                   };
+    echo "Hello {$event->owner->str}"; 
+};
 
 Event::on($object, $eventName, $handler);
 
