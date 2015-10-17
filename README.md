@@ -62,7 +62,7 @@ Documentation
 
 To subscribe to the event.
 
-Set the handler can be as follows:
+Set a handler can be as follows:
 
 ```php
 $handler = function (Event $event) { 
